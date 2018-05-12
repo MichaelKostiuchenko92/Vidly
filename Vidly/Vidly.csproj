@@ -221,6 +221,14 @@
     <Compile Include="Migrations\201805112103346_AddGenre2.Designer.cs">
       <DependentUpon>201805112103346_AddGenre2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805120933408_AddMembership.cs" />
+    <Compile Include="Migrations\201805120933408_AddMembership.Designer.cs">
+      <DependentUpon>201805120933408_AddMembership.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805121402255_DeleteAttr.cs" />
+    <Compile Include="Migrations\201805121402255_DeleteAttr.Designer.cs">
+      <DependentUpon>201805121402255_DeleteAttr.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -231,6 +239,8 @@
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\NewCustomerViewModel.cs" />
+    <Compile Include="ViewModels\NewMovieViewModel.cs" />
     <Compile Include="ViewModels\RandomMovieViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -306,6 +316,8 @@
     <Content Include="Views\Customers\Details.cshtml" />
     <Content Include="Views\Movies\Index.cshtml" />
     <Content Include="Views\Movies\Details.cshtml" />
+    <Content Include="Views\Customers\CustomerForm.cshtml" />
+    <Content Include="Views\Movies\MovieForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -332,6 +344,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805112103346_AddGenre2.resx">
       <DependentUpon>201805112103346_AddGenre2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805120933408_AddMembership.resx">
+      <DependentUpon>201805120933408_AddMembership.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805121402255_DeleteAttr.resx">
+      <DependentUpon>201805121402255_DeleteAttr.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

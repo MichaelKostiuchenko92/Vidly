@@ -23,7 +23,7 @@ namespace Vidly.Controllers
             _context.Dispose();
         }
 
-   
+
 
         [Route("movies/released/{year}/{month:regex(\\d{2})}")]
         public ActionResult ByReleaseDate(int year, int month)
@@ -33,21 +33,60 @@ namespace Vidly.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
+
+            if (movie == null)
+                return HttpNotFound();
+
+            var viewModel = new MovieFormViewModel
+            {
+                Movie = movie,
+                Genres = _context.Genres.ToList()
+            };
+
+            return View("MovieForm", viewModel);
         }
 
-       
-
-        public ActionResult Index()
+        public ActionResult New()
         {
-            var movies = _context.Movies.Include(m => m.Genre).ToList();
-            return View(movies);
+            var viewModel = new MovieFormViewModel
+            {
+                Genres = _context.Genres.ToList()
+            };
+            return View("MovieForm", viewModel);
         }
 
-        public ActionResult Details(int id)
+        [HttpPost]
+        public ActionResult Save(Movie movie)
         {
-            var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
-            return View(movie);
+            if (movie.Id == 0)
+            {
+                movie.DateAdded = DateTime.Now;
+                _context.Movies.Add(movie);
+            }
+            else
+            {
+                var movieInDb = _context.Movies.Single(m => m.Id == movie.Id);
+                movieInDb.Name = movie.Name;
+                movieInDb.GenreId = movie.GenreId;
+                movieInDb.NumberInStock = movie.NumberInStock;
+                movieInDb.ReleaseDate = movie.ReleaseDate;
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Movies");
+
+        }
+
+            public ActionResult Index()
+            {
+                var movies = _context.Movies.Include(m => m.Genre).ToList();
+                return View(movies);
+            }
+
+            public ActionResult Details(int id)
+            {
+                var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
+                return View(movie);
+            }
         }
     }
-}
