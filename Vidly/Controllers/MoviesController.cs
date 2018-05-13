@@ -23,14 +23,28 @@ namespace Vidly.Controllers
             _context.Dispose();
         }
 
-
-
-        [Route("movies/released/{year}/{month:regex(\\d{2})}")]
-        public ActionResult ByReleaseDate(int year, int month)
+        public ViewResult Index()
         {
-            return Content(year + "/" + month);
+            
+                return View("List");
+
+            
         }
 
+        
+        public ViewResult New()
+        {
+            var genres = _context.Genres.ToList();
+
+            var viewModel = new MovieFormViewModel
+            {
+                Genres = genres
+            };
+
+            return View("MovieForm", viewModel);
+        }
+
+        
         public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
@@ -38,36 +52,58 @@ namespace Vidly.Controllers
             if (movie == null)
                 return HttpNotFound();
 
-            var viewModel = new MovieFormViewModel
+            var viewModel = new MovieFormViewModel(movie)
             {
-                Movie = movie,
                 Genres = _context.Genres.ToList()
             };
 
             return View("MovieForm", viewModel);
         }
 
-        public ActionResult New()
+
+        public ActionResult Details(int id)
         {
-            var viewModel = new MovieFormViewModel
+            var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return HttpNotFound();
+
+            return View(movie);
+
+        }
+
+
+        // GET: Movies/Random
+        public ActionResult Random()
+        {
+            var movie = new Movie() { Name = "Shrek!" };
+            var customers = new List<Customer>
             {
-                
-                Genres = _context.Genres.ToList()
+                new Customer { Name = "Customer 1" },
+                new Customer { Name = "Customer 2" }
             };
-            return View("MovieForm", viewModel);
+
+            var viewModel = new RandomMovieViewModel
+            {
+                Movie = movie,
+                Customers = customers
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public ActionResult Save(Movie movie)
         {
             if (!ModelState.IsValid)
             {
-                var viewModel = new MovieFormViewModel
+                var viewModel = new MovieFormViewModel(movie)
                 {
-                    Movie = movie,
                     Genres = _context.Genres.ToList()
                 };
+
                 return View("MovieForm", viewModel);
             }
 
@@ -84,21 +120,10 @@ namespace Vidly.Controllers
                 movieInDb.NumberInStock = movie.NumberInStock;
                 movieInDb.ReleaseDate = movie.ReleaseDate;
             }
+
             _context.SaveChanges();
+
             return RedirectToAction("Index", "Movies");
-
-        }
-
-            public ActionResult Index()
-            {
-                var movies = _context.Movies.Include(m => m.Genre).ToList();
-                return View(movies);
-            }
-
-            public ActionResult Details(int id)
-            {
-                var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
-                return View(movie);
-            }
         }
     }
+}
