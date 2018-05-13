@@ -24,11 +24,8 @@ namespace Vidly.Controllers
         }
 
         public ViewResult Index()
-        {
-            
+        { 
                 return View("List");
-
-            
         }
 
         
@@ -44,7 +41,7 @@ namespace Vidly.Controllers
             return View("MovieForm", viewModel);
         }
 
-        
+      
         public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
@@ -94,7 +91,6 @@ namespace Vidly.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
         public ActionResult Save(Movie movie)
         {
             if (!ModelState.IsValid)
